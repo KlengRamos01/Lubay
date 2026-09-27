@@ -224,7 +224,6 @@ export default function Page() {
               <>
                 {m.toolInvocations.map(
                 (inv: any) =>
-                  inv.state === 'result' &&
                   inv.toolName === 'getInformation' && (
                     <details
                       key={inv.toolCallId}
@@ -233,12 +232,18 @@ export default function Page() {
                       <summary className="cursor-pointer hover:text-sky-600 transition-colors font-medium select-none">
                         📄 Sources
                       </summary>
-                      <div className="mt-3 text-xs text-slate-500 italic">
-                        <p>Source: How to Manage and Reduce Stress Guide by Mental Health Foundation UK</p>
-                        <p className="mt-1">
-                          Referenced pages: {[...new Set((inv.result as Source[]).map((src: Source) => src.page).filter((p): p is number => p !== undefined))].sort((a, b) => a - b).join(', ')}
-                        </p>
-                      </div>
+                      {inv.state === 'result' && inv.result ? (
+                        <div className="mt-3 text-xs text-slate-500 italic">
+                          <p>Source: How to Manage and Reduce Stress Guide by Mental Health Foundation UK</p>
+                          <p className="mt-1">
+                            Referenced pages: {[...new Set((inv.result as Source[]).map((src: Source) => src.page).filter((p): p is number => p !== undefined))].sort((a, b) => a - b).join(', ')}
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="mt-3 text-xs text-sky-500">
+                          Searching knowledge base...
+                        </div>
+                      )}
                     </details>
                   ),
               )}
