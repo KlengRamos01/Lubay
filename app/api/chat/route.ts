@@ -49,24 +49,36 @@ export async function POST(req: Request) {
         execute: async ({ query }) => {
           try {
             console.log('Tool called with query:', query);
+            
+            // Check env vars
+            console.log('OPENAI_API_KEY exists:', !!process.env.OPENAI_API_KEY);
+            console.log('UPSTASH_VECTOR_REST_URL exists:', !!process.env.UPSTASH_VECTOR_REST_URL);
+            
+            console.log('Starting embedding...');
             const { embedding } = await embed({
               model: openai.embedding('text-embedding-3-small'),
               value: query,
             });
-            console.log('Embedding created:', embedding.length);
+            console.log('Embedding created, length:', embedding.length);
+            
+            console.log('Starting vector query...');
             const hits = await index.query({
               vector: embedding,
               topK: 8,
               includeMetadata: true,
             });
             console.log('Hits retrieved:', hits.length);
-            return hits.map((h) => ({
+            
+            const results = hits.map((h) => ({
               text: (h.metadata?.text as string) ?? '',
               page: (h.metadata?.page as number) ?? null,
               score: h.score,
             }));
+            console.log('Returning results:', results.length);
+            return results;
           } catch (error) {
             console.error('Tool execution error:', error);
+            console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
             return [];
           }
         },
