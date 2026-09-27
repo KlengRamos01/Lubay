@@ -238,6 +238,9 @@ export default function Page() {
                           </li>
                         ))}
                       </ul>
+                      <p className="mt-3 pt-2 border-t border-sky-100 text-xs text-slate-500 italic">
+                        Source: How to Manage and Reduce Stress Guide by Mental Health Foundation UK
+                      </p>
                     </details>
                   ),
               )}
