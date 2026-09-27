@@ -220,31 +220,14 @@ export default function Page() {
                       className="mt-3 text-sm text-slate-600 max-w-[85%] bg-white/50 backdrop-blur rounded-xl border border-sky-100 px-4 py-3"
                     >
                       <summary className="cursor-pointer hover:text-sky-600 transition-colors font-medium select-none">
-                        📄 Sources ({(inv.result as Source[]).length})
+                        📄 Sources
                       </summary>
-                      <ul className="mt-3 space-y-2.5">
-                        {(inv.result as Source[]).map((src, i) => (
-                          <li
-                            key={i}
-                            className="border-l-2 border-sky-300 pl-3 source-card"
-                          >
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-sky-100 text-sky-700">
-                                📄 Page {src.page ?? '?'}
-                              </span>
-                              {typeof src.score === 'number' && (
-                                <span className="text-xs text-slate-400">
-                                  {(src.score * 100).toFixed(0)}% match
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-slate-600 leading-relaxed">{src.text}</p>
-                          </li>
-                        ))}
-                      </ul>
-                      <p className="mt-3 pt-2 border-t border-sky-100 text-xs text-slate-500 italic">
-                        Source: How to Manage and Reduce Stress Guide by Mental Health Foundation UK
-                      </p>
+                      <div className="mt-3 text-xs text-slate-500 italic">
+                        <p>Source: How to Manage and Reduce Stress Guide by Mental Health Foundation UK</p>
+                        <p className="mt-1">
+                          Referenced pages: {[...new Set((inv.result as Source[]).map((src: Source) => src.page).filter((p): p is number => p !== undefined))].sort((a, b) => a - b).join(', ')}
+                        </p>
+                      </div>
                     </details>
                   ),
               )}
