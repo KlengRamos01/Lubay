@@ -228,13 +228,17 @@ export default function Page() {
                             key={i}
                             className="border-l-2 border-sky-300 pl-3 source-card"
                           >
-                            <span className="text-xs font-semibold text-sky-500 uppercase tracking-wide">
-                              Page {src.page ?? '?'} ·{' '}
-                              {typeof src.score === 'number'
-                                ? `${(src.score * 100).toFixed(0)}% match`
-                                : '—'}
-                            </span>
-                            <p className="mt-0.5 text-slate-600 leading-relaxed">{src.text}</p>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-sky-100 text-sky-700">
+                                📄 Page {src.page ?? '?'}
+                              </span>
+                              {typeof src.score === 'number' && (
+                                <span className="text-xs text-slate-400">
+                                  {(src.score * 100).toFixed(0)}% match
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-slate-600 leading-relaxed">{src.text}</p>
                           </li>
                         ))}
                       </ul>
