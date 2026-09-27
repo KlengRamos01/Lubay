@@ -96,6 +96,14 @@ export default function Page() {
       const lastMsg = messages[messages.length - 1];
       if (lastMsg.role === 'assistant' && lastMsg.toolInvocations) {
         console.log('Tool invocations:', lastMsg.toolInvocations);
+        lastMsg.toolInvocations.forEach((inv: any, i: number) => {
+          console.log(`Tool ${i}:`, {
+            state: inv.state,
+            toolName: inv.toolName,
+            hasResult: !!inv.result,
+            resultLength: inv.result?.length
+          });
+        });
       }
     }
   }, [messages]);
@@ -221,33 +229,30 @@ export default function Page() {
             </div>
 
             {m.role === 'assistant' && m.toolInvocations && m.toolInvocations.length > 0 && (
-              <>
-                {m.toolInvocations.map(
-                (inv: any) =>
+              <div className="mt-3">
+                {m.toolInvocations.map((inv: any) => (
                   inv.toolName === 'getInformation' && (
-                    <details
+                    <div
                       key={inv.toolCallId}
-                      className="mt-3 text-sm text-slate-600 max-w-[85%] bg-white/50 backdrop-blur rounded-xl border border-sky-100 px-4 py-3"
+                      className="text-sm bg-white/60 backdrop-blur rounded-xl border border-sky-200 px-4 py-3 max-w-[85%]"
                     >
-                      <summary className="cursor-pointer hover:text-sky-600 transition-colors font-medium select-none">
-                        📄 Sources
-                      </summary>
+                      <div className="font-semibold text-sky-700 mb-1">📄 Sources</div>
                       {inv.state === 'result' && inv.result ? (
-                        <div className="mt-3 text-xs text-slate-500 italic">
-                          <p>Source: How to Manage and Reduce Stress Guide by Mental Health Foundation UK</p>
-                          <p className="mt-1">
+                        <div className="text-xs">
+                          <p className="text-slate-700 font-medium">Source: How to Manage and Reduce Stress Guide by Mental Health Foundation UK</p>
+                          <p className="text-sky-600 mt-1 font-semibold">
                             Referenced pages: {[...new Set((inv.result as Source[]).map((src: Source) => src.page).filter((p): p is number => p !== undefined))].sort((a, b) => a - b).join(', ')}
                           </p>
                         </div>
                       ) : (
-                        <div className="mt-3 text-xs text-sky-500">
+                        <div className="text-xs text-sky-500 animate-pulse">
                           Searching knowledge base...
                         </div>
                       )}
-                    </details>
-                  ),
-              )}
-              </>
+                    </div>
+                  )
+                ))}
+              </div>
             )}
           </li>
         ))}
