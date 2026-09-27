@@ -47,20 +47,28 @@ export async function POST(req: Request) {
             .describe('the topic, term, or sub-question to search for'),
         }),
         execute: async ({ query }) => {
-          const { embedding } = await embed({
-            model: openai.embedding('text-embedding-3-small'),
-            value: query,
-          });
-          const hits = await index.query({
-            vector: embedding,
-            topK: 8,
-            includeMetadata: true,
-          });
-          return hits.map((h) => ({
-            text: (h.metadata?.text as string) ?? '',
-            page: (h.metadata?.page as number) ?? null,
-            score: h.score,
-          }));
+          try {
+            console.log('Tool called with query:', query);
+            const { embedding } = await embed({
+              model: openai.embedding('text-embedding-3-small'),
+              value: query,
+            });
+            console.log('Embedding created:', embedding.length);
+            const hits = await index.query({
+              vector: embedding,
+              topK: 8,
+              includeMetadata: true,
+            });
+            console.log('Hits retrieved:', hits.length);
+            return hits.map((h) => ({
+              text: (h.metadata?.text as string) ?? '',
+              page: (h.metadata?.page as number) ?? null,
+              score: h.score,
+            }));
+          } catch (error) {
+            console.error('Tool execution error:', error);
+            return [];
+          }
         },
       }),
     },
