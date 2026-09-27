@@ -90,6 +90,16 @@ export default function Page() {
     setCurrentChatId(chatId);
   };
 
+  // Debug: Log messages to see tool invocations
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.role === 'assistant' && lastMsg.toolInvocations) {
+        console.log('Tool invocations:', lastMsg.toolInvocations);
+      }
+    }
+  }, [messages]);
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -210,8 +220,9 @@ export default function Page() {
               )}
             </div>
 
-            {m.role === 'assistant' &&
-              m.toolInvocations?.map(
+            {m.role === 'assistant' && m.toolInvocations && m.toolInvocations.length > 0 && (
+              <>
+                {m.toolInvocations.map(
                 (inv: any) =>
                   inv.state === 'result' &&
                   inv.toolName === 'getInformation' && (
@@ -231,6 +242,8 @@ export default function Page() {
                     </details>
                   ),
               )}
+              </>
+            )}
           </li>
         ))}
         {status === 'streaming' && (
