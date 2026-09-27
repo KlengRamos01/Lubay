@@ -90,9 +90,6 @@ export default function Page() {
     setCurrentChatId(chatId);
   };
 
-  const currentChat = chatHistory.find(chat => chat.id === currentChatId);
-  const displayMessages = currentChat?.messages || [];
-
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -153,7 +150,7 @@ export default function Page() {
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto px-6 py-4">
-        {displayMessages.length === 0 && (
+        {messages.length === 0 && (
           <div className="text-center py-16 flex-1 flex flex-col items-center justify-center">
             <div className="w-20 h-20 bg-gradient-to-br from-sky-200 to-teal-100 rounded-full flex items-center justify-center mx-auto mb-5 breathe-glow">
               <span className="text-3xl">🌿</span>
@@ -188,7 +185,7 @@ export default function Page() {
         )}
 
         <ul className="space-y-5 mb-6 min-h-[200px]">
-          {displayMessages.map((m) => (
+          {messages.map((m) => (
           <li
             key={m.id}
             className={
